@@ -13,20 +13,14 @@ Quality scorecard scored against an 8-dimension rubric derived from CB Insights,
 
 How it works
 The pipeline runs five sequential components:
-User input
-    ↓
-Query Decomposition    — Claude breaks the topic into 4–6 sub-questions, each mapped to a signal type
-    ↓
-Retrieval              — Tavily searches the web for each sub-question in parallel
-    ↓
-Credibility Filter     — Scores and removes low-quality sources, checks 2-signal-type minimum
-    ↓
-Synthesis              — 3 sequential Claude calls: identify trends → populate deep-dives → cross-trend synthesis
-    ↓
-Evaluation             — Claude scores the brief against the quality rubric
-    ↓
-Output                 — Rendered markdown brief + raw JSON saved to /logs
-A trend is only included if it is supported by at least two independent signal types. Counter-signals are mandatory for every trend. Strategic implications are tailored to the audience specified at input.
+> User input
+> Query Decomposition    — Claude breaks the topic into 4–6 sub-questions, each mapped to a signal type
+> Retrieval              — Tavily searches the web for each sub-question in parallel
+> Credibility Filter     — Scores and removes low-quality sources, checks 2-signal-type minimum
+> Synthesis              — 3 sequential Claude calls: identify trends → populate deep-dives → cross-trend synthesis
+> Evaluation             — Claude scores the brief against the quality rubric
+> Output                 — Rendered markdown brief + raw JSON saved to /logs
+> A trend is only included if it is supported by at least two independent signal types. Counter-signals are mandatory for every trend. Strategic implications are tailored to the audience specified at input.
 
 Stack
 
@@ -39,13 +33,13 @@ JSON — local logging of all runs
 
 Setup
 1. Clone the repo and create a virtual environment
-bashgit clone https://github.com/yourname/pulse.git
+bash git clone https://github.com/yourname/pulse.git
 cd pulse
 python -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
-2. Install dependencies
-bashpip install anthropic tavily-python requests python-dotenv streamlit
-3. Add your API keys
+3. Install dependencies
+bash pip install anthropic tavily-python requests python-dotenv streamlit
+4. Add your API keys
 Create a .env file in the project root:
 ANTHROPIC_API_KEY=your_key_here
 TAVILY_API_KEY=your_key_here
