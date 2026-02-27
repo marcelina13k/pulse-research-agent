@@ -347,9 +347,9 @@ if __name__ == "__main__":
     from credibility_filter import run_credibility_filter
 
     query = validate_input(
-        topic="AI adoption in healthcare diagnostics",
-        audience="investor",
-        geography="north america",
+        topic="electric vehicle battery technology",
+        audience="general",
+        geography="global",
         time_horizon="12 months"
     )
 

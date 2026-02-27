@@ -1,6 +1,6 @@
 # retrieval.py
 # Takes the research plan from query_decomposition and executes
-# parallel searches across Tavily and NewsAPI for each sub-question.
+# parallel searches across Tavily for each sub-question.
 # Returns a list of tagged, structured evidence objects ready
 # for the credibility filter.
 
@@ -49,57 +49,11 @@ def search_tavily(search_query: str, signal_type: str) -> list[dict]:
         return []
 
 
-def search_newsapi(search_query: str, signal_type: str, days_back: int = 90) -> list[dict]:
-    """
-    Searches NewsAPI for recent news articles.
-    days_back controls how far back to search — default 90 days.
-    """
-    from_date = (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
-
-    params = {
-        "q": search_query,
-        "from": from_date,
-        "sortBy": "relevancy",
-        "language": "en",
-        "pageSize": 5,  # top 5 results per query
-        "apiKey": NEWS_API_KEY
-    }
-
-    try:
-        response = requests.get(NEWS_API_URL, params=params, timeout=10)
-
-        # raise_for_status() throws an error if the HTTP response
-        # code is 4xx or 5xx — catches bad API keys, rate limits etc
-        response.raise_for_status()
-        data = response.json()
-
-        results = []
-        for article in data.get("articles", []):
-            # Skip articles with removed content
-            if article.get("title") == "[Removed]":
-                continue
-
-            results.append({
-                "title": article.get("title", ""),
-                "url": article.get("url", ""),
-                "excerpt": article.get("description", ""),
-                "source": article.get("source", {}).get("name", ""),
-                "published_date": article.get("publishedAt", ""),
-                "signal_type": signal_type,
-                "retrieval_source": "newsapi"
-            })
-        return results
-
-    except Exception as e:
-        print(f"  NewsAPI error for '{search_query}': {e}")
-        return []
-
-
 def retrieve_evidence(research_plan: dict) -> list[dict]:
     """
     Main retrieval function. Takes the research plan from
     query_decomposition and runs searches for every sub-question
-    across both Tavily and NewsAPI.
+    across Tavily.
 
     Returns a flat list of all evidence objects — every result
     from every source for every sub-question combined.
